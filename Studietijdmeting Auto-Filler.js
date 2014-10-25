@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name       Studietijdmeting Auto-Filler
 // @namespace  studietijdmeting.is.boring
 // @version    1.0
@@ -34,16 +34,16 @@ function getRandomTime(minHours, maxHours)
 function fillTimes()
 {
 	for(course in courses)
-	{		
-		$('.partim:contains("'+ course +'")').parent().find("td:not(.partim)").find("input").each(function(e)
 		{
-			if(ignoreExistingTimes || ($(this).val() == "" || $(this).val() == "00:00" || $(this).val() == "0:0"))
+			$('.partim:contains("'+ course +'")').parent().find("td:not(.partim)").find("input").each(function(e)
 			{
-				var randomTime = getRandomTime(minHours, courses[course]);
-				$(this).val(randomTime);
+				if(ignoreExistingTimes || ($(this).val() == "" || $(this).val() == "00:00" || $(this).val() == "0:0"))
+					{
+						var randomTime = getRandomTime(minHours, courses[course]);
+						$(this).val(randomTime);
+					}
+				});
 			}
-		});
-	}
-}
+		}
 
 fillTimes();
