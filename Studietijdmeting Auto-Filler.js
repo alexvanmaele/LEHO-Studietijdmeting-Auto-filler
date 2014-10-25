@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name       Studietijdmeting Auto-Filler
 // @namespace  studietijdmeting.is.boring
-// @version    1.0
-// @description  Automatically fills in the Studietijdmeting according to maxHours per course
-// @match      https://studietijdmeting.howest.be/stm/student/listModulesAndPartimsForStudietijdmetingByStudent.jsp
-// @copyright  2013+, Alex Van Maele
+// @description  Automatically fills in the Studietijdmeting according to maxHours per course.
+// @match      *://*.studietijdmeting.howest.be/stm/student/listModulesAndPartimsForStudietijdmetingByStudent.jsp*
 // @require    http://code.jquery.com/jquery-latest.pack.js
+// @grant	none
 // ==/UserScript==
 
 console.log("Studietijdmeting Auto-Filler loaded!");
@@ -17,9 +16,9 @@ var courses = { };
 
 // Edit your courses like:
 // courses["courseName"] = maxHoursForCourse;
-courses["Beveiligingsproject"] = 10;
-courses["Java"] = 4;
-courses["Onderzoeksproject"] = 6;
+courses["Stage en eindwerk"] = 10;
+courses["Forensische ICT tools"] = 4;
+courses["Linux Server security"] = 4;
 
 
 
@@ -34,16 +33,16 @@ function getRandomTime(minHours, maxHours)
 function fillTimes()
 {
 	for(course in courses)
+	{		
+		$('th, .partim:contains("'+ course +'")').parent().find("td:not(.partim)").find("input").each(function(e)
 		{
-			$('.partim:contains("'+ course +'")').parent().find("td:not(.partim)").find("input").each(function(e)
+			if(ignoreExistingTimes || ($(this).val() == "" || $(this).val() == "00:00" || $(this).val() == "0:0"))
 			{
-				if(ignoreExistingTimes || ($(this).val() == "" || $(this).val() == "00:00" || $(this).val() == "0:0"))
-					{
-						var randomTime = getRandomTime(minHours, courses[course]);
-						$(this).val(randomTime);
-					}
-				});
+				var randomTime = getRandomTime(minHours, courses[course]);
+				$(this).val(randomTime);
 			}
-		}
+		});
+	}
+}
 
 fillTimes();
